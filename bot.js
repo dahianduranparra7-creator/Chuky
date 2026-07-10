@@ -4,14 +4,18 @@ const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
 function welcomeMessage(username) {
-  return `༒ Bienvenido a Bloodline @${username} 🩸
+  return `༒ Bienvenido a Bloodline, @${username} 🩸
 
-Nos alegra tenerte con nosotros.
-Recuerda donar 200 de oro al entrar al clan para permanecer.
+Nos alegra tenerte con nosotros 🐺
 
-¡Disfruta del clan y forma parte de Bloodline! 🐺
+💰 Recuerda donar 200 monedas de oro al entrar al clan.
 
-Discord: https://discord.gg/XwmT343b`;
+Únete a nuestro Discord para conocer a la comunidad, participar en actividades y estar al día:
+
+💬 Discord:
+https://discord.gg/XwmT343b
+
+¡Disfruta tu estancia en Bloodline! 🩸`;
 }
 
 async function getMembers() {
@@ -64,24 +68,36 @@ async function main() {
 
   const members = await getMembers();
 
+  let newMembers = [];
+
   for (const member of members) {
     if (
       member.status === "ACCEPTED" &&
       !welcomedUsers.includes(member.playerId)
     ) {
+      newMembers.push(member);
       welcomedUsers.push(member.playerId);
-
-      fs.writeFileSync(
-        file,
-        JSON.stringify(welcomedUsers, null, 2)
-      );
-
-      await sendMessage(welcomeMessage(member.username));
-
-      console.log(`Bienvenida enviada a ${member.username}`);
-      break;
     }
   }
+
+  if (newMembers.length > 0) {
+    const names = newMembers
+      .map((member) => `@${member.username}`)
+      .join(", ");
+
+    await sendMessage(
+      welcomeMessage(names)
+    );
+
+    console.log(`Bienvenida enviada a: ${names}`);
+  } else {
+    console.log("No hay jugadores nuevos");
+  }
+
+  fs.writeFileSync(
+    file,
+    JSON.stringify(welcomedUsers, null, 2)
+  );
 
   console.log("Bot funcionando correctamente");
 }
