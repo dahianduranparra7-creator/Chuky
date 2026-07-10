@@ -1,4 +1,6 @@
+
 name: Bloodline Welcome Bot
+# Version 2
 
 on:
   schedule:
@@ -7,7 +9,6 @@ on:
 
 permissions:
   contents: write
-
 
 jobs:
   run-bot:
