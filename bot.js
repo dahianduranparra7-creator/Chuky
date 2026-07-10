@@ -4,7 +4,7 @@ const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
 function welcomeMessage(username) {
-  return `༒ Bienvenido a Bloodline, ${username} 🩸
+  return `༒ Bienvenido a Bloodline @${username} 🩸
 
 Nos alegra tenerte con nosotros.
 Recuerda donar 200 de oro al entrar al clan para permanecer.
@@ -65,17 +65,23 @@ async function main() {
   const members = await getMembers();
 
   for (const member of members) {
-    if (!welcomedUsers.includes(member.playerId)) {
-      await sendMessage(welcomeMessage(member.username));
-
+    if (
+      member.status === "ACCEPTED" &&
+      !welcomedUsers.includes(member.playerId)
+    ) {
       welcomedUsers.push(member.playerId);
+
+      fs.writeFileSync(
+        file,
+        JSON.stringify(welcomedUsers, null, 2)
+      );
+
+      await sendMessage(welcomeMessage(member.username));
 
       console.log(`Bienvenida enviada a ${member.username}`);
       break;
     }
   }
-
-  fs.writeFileSync(file, JSON.stringify(welcomedUsers, null, 2));
 
   console.log("Bot funcionando correctamente");
 }
