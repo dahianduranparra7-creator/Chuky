@@ -1,0 +1,13 @@
+name: Bot Chuky
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ejecutar bot
+        run: echo "Bot Chuky funcionando"
