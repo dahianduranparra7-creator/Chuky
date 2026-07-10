@@ -1,13 +1,25 @@
-name: Bot Chuky
+name: Bloodline Welcome Bot
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Ejecutar bot
-        run: echo "Bot Chuky funcionando"
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          CLAN_ID: ${{ secrets.CLAN_ID }}
+        run: node bot.js
