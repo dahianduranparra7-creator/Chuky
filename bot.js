@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs"); 
 
 const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
