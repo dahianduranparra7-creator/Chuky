@@ -3,7 +3,7 @@ name: Bloodline Welcome Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "* * * * *"
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
           CLAN_ID: ${{ secrets.CLAN_ID }}
         run: node bot.js
 
-      - name: Guardar memoria
+      - name: Guardar memoria del bot
         run: |
           git config --global user.name "Bloodline Bot"
           git config --global user.email "bot@github.com"
