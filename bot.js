@@ -3,22 +3,21 @@ const fs = require("fs");
 const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
-const welcomeMessage = (username) => `
-༒ Bienvenido a Bloodline, ${username} 🩸
+function welcomeMessage(username) {
+  return `༒ Bienvenido a Bloodline, ${username} 🩸
 
 Nos alegra tenerte con nosotros.
 Recuerda donar 200 de oro al entrar al clan para permanecer.
 
-¡Disfruta del clan y sé parte de la familia Bloodline! 🐺
+¡Disfruta del clan y forma parte de Bloodline! 🐺
 
-Discord: https://discord.gg/XwmT343b
-`;
+Discord: https://discord.gg/XwmT343b`;
+}
 
 async function getMembers() {
   const response = await fetch(
     `https://api.wolvesville.com/clans/${CLAN_ID}/members`,
     {
-      method: "GET",
       headers: {
         Accept: "application/json",
         Authorization: `Bot ${API_KEY}`,
@@ -33,7 +32,7 @@ async function getMembers() {
   return await response.json();
 }
 
-async function sendClanMessage(message) {
+async function sendMessage(message) {
   const response = await fetch(
     `https://api.wolvesville.com/clans/${CLAN_ID}/chat`,
     {
@@ -67,7 +66,7 @@ async function main() {
 
   for (const member of members) {
     if (!welcomedUsers.includes(member.playerId)) {
-      await sendClanMessage(welcomeMessage(member.username));
+      await sendMessage(welcomeMessage(member.username));
 
       welcomedUsers.push(member.playerId);
 
@@ -76,10 +75,7 @@ async function main() {
     }
   }
 
-  fs.writeFileSync(
-    file,
-    JSON.stringify(welcomedUsers, null, 2)
-  );
+  fs.writeFileSync(file, JSON.stringify(welcomedUsers, null, 2));
 
   console.log("Bot funcionando correctamente");
 }
