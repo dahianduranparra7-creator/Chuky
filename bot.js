@@ -3,42 +3,45 @@ const fs = require("fs");
 const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
-const MESSAGE = (username) => 
-`༒ Bienvenido a Bloodline, ${username} 🩸
+const welcomeMessage = (username) => `
+༒ Bienvenido a Bloodline, ${username} 🩸
 
 Nos alegra tenerte con nosotros.
 Recuerda donar 200 de oro al entrar al clan para permanecer.
 
-¡Disfruta y forma parte de la familia Bloodline! 🐺
+¡Disfruta del clan y sé parte de la familia Bloodline! 🐺
 
-Discord: https://discord.gg/XwmT343b`;
+Discord: https://discord.gg/XwmT343b
+`;
 
 async function getMembers() {
   const response = await fetch(
-    https://api.wolvesville.com/clans/${CLAN_ID}/members,
+    `https://api.wolvesville.com/clans/${CLAN_ID}/members`,
     {
+      method: "GET",
       headers: {
-        Authorization: Bot ${API_KEY},
         Accept: "application/json",
+        Authorization: `Bot ${API_KEY}`,
       },
     }
   );
 
   if (!response.ok) {
-    throw new Error(Error al obtener miembros: ${response.status});
+    throw new Error(`Error obteniendo miembros: ${response.status}`);
   }
 
   return await response.json();
 }
 
-async function sendMessage(message) {
+async function sendClanMessage(message) {
   const response = await fetch(
-    https://api.wolvesville.com/clans/${CLAN_ID}/chat,
+    `https://api.wolvesville.com/clans/${CLAN_ID}/chat`,
     {
       method: "POST",
       headers: {
-        Authorization: Bot ${API_KEY},
+        Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bot ${API_KEY}`,
       },
       body: JSON.stringify({
         message: message,
@@ -47,7 +50,7 @@ async function sendMessage(message) {
   );
 
   if (!response.ok) {
-    throw new Error(Error enviando mensaje: ${response.status});
+    throw new Error(`Error enviando mensaje: ${response.status}`);
   }
 }
 
@@ -64,13 +67,19 @@ async function main() {
 
   for (const member of members) {
     if (!welcomedUsers.includes(member.playerId)) {
-      await sendMessage(MESSAGE(member.username));
+      await sendClanMessage(welcomeMessage(member.username));
+
       welcomedUsers.push(member.playerId);
+
+      console.log(`Bienvenida enviada a ${member.username}`);
       break;
     }
   }
 
-  fs.writeFileSync(file, JSON.stringify(welcomedUsers, null, 2));
+  fs.writeFileSync(
+    file,
+    JSON.stringify(welcomedUsers, null, 2)
+  );
 
   console.log("Bot funcionando correctamente");
 }
