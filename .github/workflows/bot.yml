@@ -5,6 +5,9 @@ on:
     - cron: "*/5 * * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   run-bot:
     runs-on: ubuntu-latest
@@ -23,3 +26,11 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           CLAN_ID: ${{ secrets.CLAN_ID }}
         run: node bot.js
+
+      - name: Guardar memoria del bot
+        run: |
+          git config --global user.name "Bloodline Bot"
+          git config --global user.email "bot@github.com"
+          git add welcomed_users.json initialized.json
+          git commit -m "Update bot memory" || echo "No changes"
+          git push
