@@ -4,7 +4,7 @@ const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
 function welcomeMessage(username) {
-  return `༒ Bienvenido a Bloodline, @${username} 🩸
+  return `༒ Bienvenido a Bloodline, ${username} 🩸
 
 Nos alegra tenerte con nosotros 🐺
 
@@ -63,35 +63,41 @@ async function main() {
   let welcomedUsers = [];
 
   if (fs.existsSync(file)) {
-    welcomedUsers = JSON.parse(fs.readFileSync(file, "utf8"));
+    try {
+      welcomedUsers = JSON.parse(fs.readFileSync(file, "utf8"));
+    } catch (error) {
+      console.log("No se pudo leer la memoria. Se creará una nueva.");
+      welcomedUsers = [];
+    }
   }
 
   const members = await getMembers();
 
-  let newMembers = [];
+  const newMembers = [];
 
   for (const member of members) {
-    if (
-      member.status === "ACCEPTED" &&
-      !welcomedUsers.includes(member.playerId)
-    ) {
+    const playerId = member.playerId;
+
+    if (!playerId) {
+      continue;
+    }
+
+    if (!welcomedUsers.includes(playerId)) {
       newMembers.push(member);
-      welcomedUsers.push(member.playerId);
+      welcomedUsers.push(playerId);
     }
   }
 
   if (newMembers.length > 0) {
-    const names = newMembers
-      .map((member) => `@${member.username}`)
-      .join(", ");
+    for (const member of newMembers) {
+      const username = member.username || member.playerId;
 
-    await sendMessage(
-      welcomeMessage(names)
-    );
+      await sendMessage(welcomeMessage(`@${username}`));
 
-    console.log(`Bienvenida enviada a: ${names}`);
+      console.log(`Bienvenida enviada a: ${username}`);
+    }
   } else {
-    console.log("No hay jugadores nuevos");
+    console.log("No hay jugadores nuevos.");
   }
 
   fs.writeFileSync(
@@ -99,10 +105,10 @@ async function main() {
     JSON.stringify(welcomedUsers, null, 2)
   );
 
-  console.log("Bot funcionando correctamente");
+  console.log("Bot funcionando correctamente.");
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error("ERROR:", error);
   process.exit(1);
 });
