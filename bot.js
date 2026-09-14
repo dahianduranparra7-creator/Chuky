@@ -13,7 +13,7 @@ Nos alegra tenerte con nosotros 🐺
 Únete a nuestro Discord para conocer a la comunidad, participar en actividades y estar al día:
 
 💬 Discord:
-https://discord.gg/XwmT343b
+https://discord.gg/yjfRFh5b
 
 ¡Disfruta tu estancia en Bloodline! 🩸`;
 }
