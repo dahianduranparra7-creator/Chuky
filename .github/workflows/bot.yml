@@ -3,7 +3,7 @@ name: Bloodline Welcome Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "* * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
