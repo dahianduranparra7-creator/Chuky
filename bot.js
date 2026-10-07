@@ -3,6 +3,27 @@ const fs = require("fs");
 const API_KEY = process.env.API_KEY;
 const CLAN_ID = process.env.CLAN_ID;
 
+async function buscarClan() {
+  const response = await fetch(
+    "https://api.wolvesville.com/clans/search?name=Blood%20linee&notFull=false&exactName=false&minLevelMin=10",
+    {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bot ${API_KEY}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error buscando clan: ${response.status}`);
+  }
+
+  const clans = await response.json();
+
+  console.log("🩸 CLANES ENCONTRADOS:");
+  console.log(JSON.stringify(clans, null, 2));
+}
+
 function welcomeMessage(username) {
   return `༒ Bienvenido a Bloodline, ${username} 🩸
 
@@ -58,6 +79,10 @@ async function sendMessage(message) {
 }
 
 async function main() {
+  console.log("🔎 Buscando el clan Blood linee...");
+  
+  await buscarClan();
+
   const file = "welcomed_users.json";
 
   let welcomedUsers = [];
